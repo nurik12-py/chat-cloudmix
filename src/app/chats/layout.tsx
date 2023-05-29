@@ -33,8 +33,8 @@ const Layout: FC<{ children: ReactElement }> = ({ children }) => {
             className="flex flex-col overflow-y-scroll max-h-full"
             style={{ height: "calc(100% - 5rem)" }}
           >
-            {chats.map(() => (
-              <Link href="/chats/d">
+            {chats.map((chat, key) => (
+              <Link key={key} href="/chats/d">
                 <ChatCard
                   name="Aslan"
                   message="Hi, how are you doing?"
