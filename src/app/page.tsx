@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <main className="min-h-screen min-w-screen flex flex-col items-center justify-center">
+    <main className="w-full h-full flex flex-col items-center justify-center overflow-hidden">
       <CloudIcon className="w-10 h-10 text-indigo-500" />
       <a
         className="text-lg font-medium"
