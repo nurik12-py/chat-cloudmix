@@ -4,11 +4,7 @@ import Link from "next/link";
 const Navbar = () => {
   return (
     <nav className="bg-light border-b border-gray-300 h-20 flex items-center justify-between py-3 px-4">
-      <a
-        className="text-lg font-medium flex items-center gap-1"
-        href="#"
-        style={{ fontFamily: "Inter" }}
-      >
+      <a className="text-lg font-medium flex items-center gap-1" href="#">
         <CloudIcon className="w-8 h-8 text-indigo-500" />
         <div>
           <span className="font-medium">Cloud</span>
