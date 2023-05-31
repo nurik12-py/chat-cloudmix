@@ -1,8 +1,21 @@
 import { CloudIcon, FireIcon } from "@heroicons/react/24/solid";
-import Image from "next/image";
+import { Spin } from "antd";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 export default function Home() {
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = window.localStorage.getItem("accessToken");
+    if (token) {
+      router.push("/chats");
+    } else {
+      router.push("/login");
+    }
+  }, []);
+
   return (
     <main className="w-full h-full flex flex-col items-center justify-center overflow-hidden">
       <CloudIcon className="w-10 h-10 text-indigo-500" />
@@ -14,12 +27,7 @@ export default function Home() {
         <span className="font-medium">Cloud</span>
         <span className="font-medium text-indigo-500">Mix</span>
       </a>
-      <Link href="/chats">
-        <button className="mt-4 px-3 py-2 flex gap-1 font-medium items-center justify-center border text-white bg-indigo-500 rounded-lg ">
-          <FireIcon className="w-5 h-5" />
-          <span>Start</span>
-        </button>
-      </Link>
+      <Spin className="mt-2" />
     </main>
   );
 }
