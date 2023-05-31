@@ -61,8 +61,8 @@ export const Chats: FC<IProps> = ({ hidden, chats, isLoading }) => {
         style={{ height: "calc(100% - 10rem)" }}
       >
         {isLoading &&
-          [0, 1, 2].map(() => (
-            <div className="px-6 py-4 border-b">
+          [0, 1, 2].map((key) => (
+            <div key={key} className="px-6 py-4 border-b">
               <Skeleton
                 paragraph={{ rows: 1 }}
                 title={{ width: "50%" }}
