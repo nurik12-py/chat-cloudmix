@@ -47,7 +47,7 @@ const Chat = () => {
 
   useEffect(() => {
     handlescrollToChatBottom();
-  }, [chat, chatId]);
+  }, [chatId]);
 
   const handlescrollToChatBottom = () => {
     setTimeout(() => {
