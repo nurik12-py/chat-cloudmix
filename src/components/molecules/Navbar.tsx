@@ -23,13 +23,13 @@ const Navbar: FC<INavbarProps> = ({ user, onLogoutClick }) => {
         </div>
       </Link>
       <div className="flex flex-col items-end justify-end">
-        <p className="font-medium">
+        <p className="font-medium h-6">
           {user.firstname} {user.lastname}
         </p>
         <Button
           type="text"
           onClick={onLogoutClick}
-          className="text-gray-400 p-0"
+          className="text-gray-400 p-0 h-6"
         >
           Logout
         </Button>
