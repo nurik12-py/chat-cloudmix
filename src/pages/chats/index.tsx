@@ -30,7 +30,12 @@ const ChatsPage: FC<{ children: ReactElement }> = ({ children }) => {
     () => chatsAPI.getAll().then((res) => res.data),
     {
       onSuccess: (data) => {
-        setChats(data);
+        setChats((prevChats) => {
+          if (prevChats.length !== data.length) {
+            return data;
+          }
+          return prevChats;
+        });
       },
     }
   );
