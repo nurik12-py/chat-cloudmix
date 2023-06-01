@@ -1,37 +1,34 @@
 import Link from "next/link";
-import { MessageCounter } from "../atoms/MessageCounter";
-import { ChatCard } from "../atoms/ChatCard";
 import { Chat } from "@/types/chat";
-import { FC, useRef } from "react";
+import { FC } from "react";
 import { Button, Skeleton } from "antd";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { chatsAPI } from "@/api/chatsAPI";
 import { useMutation, useQueryClient } from "react-query";
+import showErrorMessage from "@/utils/showErrorMessage";
+import MessageCounter from "../atoms/MessageCounter";
+import ChatCard from "../atoms/ChatCard";
 
-interface IProps {
+interface IChatsProps {
   hidden: boolean;
   chats: Chat[];
   isLoading: boolean;
 }
 
-export const Chats: FC<IProps> = ({ hidden, chats, isLoading }) => {
+const Chats: FC<IChatsProps> = ({ hidden, chats, isLoading }) => {
   const queryClient = useQueryClient();
-  const newChatMutation = useMutation(
-    () => {
-      return chatsAPI.createChat();
+
+  const createChatMutation = useMutation(chatsAPI.createChat, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("chats");
     },
-    {
-      onSuccess: (data) => {
-        queryClient.invalidateQueries("chats");
-      },
-      onError: (error) => {
-        console.log(error);
-      },
-    }
-  );
+    onError: (error) => {
+      showErrorMessage(error, "Failed to create a new chat");
+    },
+  });
 
   const handleNewChat = () => {
-    newChatMutation.mutate();
+    createChatMutation.mutate();
   };
 
   return (
@@ -45,8 +42,8 @@ export const Chats: FC<IProps> = ({ hidden, chats, isLoading }) => {
           icon={
             <PlusIcon strokeWidth={2} className="w-6 h-6 text-indigo-500" />
           }
-          loading={newChatMutation.isLoading}
-          disabled={newChatMutation.isLoading}
+          loading={createChatMutation.isLoading}
+          disabled={createChatMutation.isLoading}
           onClick={handleNewChat}
           className="w-full text-indigo-500 font-medium flex items-center justify-center"
           type="ghost"
@@ -85,3 +82,5 @@ export const Chats: FC<IProps> = ({ hidden, chats, isLoading }) => {
     </div>
   );
 };
+
+export default Chats;

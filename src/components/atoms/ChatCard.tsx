@@ -1,13 +1,13 @@
 import moment from "moment";
 import { FC } from "react";
 
-interface IProps {
+interface IChatCardProps {
   name: string;
   message: string;
   time: string;
 }
 
-export const ChatCard: FC<IProps> = ({ name, message, time }) => {
+const ChatCard: FC<IChatCardProps> = ({ name, message, time }) => {
   return (
     <div className="px-6 py-5 border-b border-gray-300">
       <span className="font-medium">{name}</span>
@@ -22,3 +22,5 @@ export const ChatCard: FC<IProps> = ({ name, message, time }) => {
     </div>
   );
 };
+
+export default ChatCard;

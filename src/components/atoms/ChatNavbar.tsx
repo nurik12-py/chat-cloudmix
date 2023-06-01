@@ -1,16 +1,16 @@
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { ChevronLeftIcon } from "@heroicons/react/24/solid";
-import { Button, Popconfirm } from "antd";
+import { Button } from "antd";
 import Link from "next/link";
 import { FC } from "react";
 
 interface IChatNavbarProps {
   name: string;
-  typing?: boolean;
+  isTyping?: boolean;
   onDeleteClick?: () => void;
 }
 
-export const ChatNavbar: FC<IChatNavbarProps> = ({ name, onDeleteClick }) => {
+const ChatNavbar: FC<IChatNavbarProps> = ({ name, onDeleteClick }) => {
   return (
     <nav className="border-b h-20 flex items-center justify-between gap-4 bg-white w-full border-gray-300 px-6 py-5">
       <div className="flex items-center gap-4">
@@ -33,3 +33,5 @@ export const ChatNavbar: FC<IChatNavbarProps> = ({ name, onDeleteClick }) => {
     </nav>
   );
 };
+
+export default ChatNavbar;

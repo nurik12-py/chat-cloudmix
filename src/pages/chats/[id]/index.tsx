@@ -1,5 +1,3 @@
-import { ChatNavbar } from "@/components/atoms/ChatNavbar";
-import { Typer } from "@/components/atoms/Typer";
 import Messages from "@/components/molecules/Messages";
 import ChatsPage from "..";
 import { useRouter } from "next/router";
@@ -7,8 +5,11 @@ import { useInfiniteQuery, useMutation, useQueryClient } from "react-query";
 import { messagesAPI } from "@/api/messagesAPI";
 import { useRecoilValue } from "recoil";
 import { ChatsState } from "@/context/chats";
-import { Modal, message } from "antd";
+import { Modal } from "antd";
 import { chatsAPI } from "@/api/chatsAPI";
+import showErrorMessage from "@/utils/showErrorMessage";
+import ChatNavbar from "@/components/atoms/ChatNavbar";
+import Typer from "@/components/atoms/Typer";
 
 const Chat = () => {
   const router = useRouter();
@@ -16,15 +17,8 @@ const Chat = () => {
   const chats = useRecoilValue(ChatsState);
   const chatId = router.query.id as string;
   const chat = chats.find((chat) => chat._id === chatId);
-  const { confirm } = Modal;
 
-  const {
-    data: messages,
-    fetchNextPage,
-    isLoading,
-    isFetchingNextPage,
-    hasNextPage,
-  } = useInfiniteQuery(
+  const { data: messages, isLoading } = useInfiniteQuery(
     ["chats", chatId, "messages"],
     ({ pageParam }) =>
       messagesAPI.getAll(chatId, 25, pageParam).then((res) => res.data),
@@ -44,7 +38,7 @@ const Chat = () => {
         console.log(data);
       },
       onError: (error) => {
-        message.error("Failed to send message");
+        showErrorMessage(error, "Failed to send message");
         queryClient.invalidateQueries({
           queryKey: ["chats", chatId, "messages"],
         });
@@ -60,12 +54,12 @@ const Chat = () => {
       router.push("/chats");
     },
     onError: (error) => {
-      message.error("Failed to delete chat");
+      showErrorMessage(error, "Failed to delete chat");
     },
   });
 
   const handleChatDelete = () => {
-    confirm({
+    Modal.confirm({
       title: "Do you want to delete this chat?",
       okType: "danger",
       onOk() {
@@ -80,11 +74,7 @@ const Chat = () => {
         name={chat?.botName || "No name"}
         onDeleteClick={handleChatDelete}
       />
-      <Messages
-        isTyping={sendMessageMutaion.isLoading}
-        messages={messages?.pages.flat() || []}
-        isLoading={isLoading}
-      />
+      <Messages messages={messages?.pages.flat() || []} isLoading={isLoading} />
       <Typer onSend={(value) => sendMessageMutaion.mutate(value)} />
     </div>
   );

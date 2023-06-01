@@ -1,14 +1,11 @@
+import { Message } from "@/types/chat";
 import { FC } from "react";
 
-export const ChatMessage: FC<{
-  message: {
-    sender: string;
-    id: string;
-    date: string;
-    text: string;
-    isRead: boolean;
-  };
-}> = ({ message }) => {
+interface IChatMessageProps {
+  message: Message;
+}
+
+const ChatMessage: FC<IChatMessageProps> = ({ message }) => {
   return (
     <span
       className={`rounded-2xl inline-block px-6 py-4 max-w-[85%] border  ${
@@ -22,3 +19,5 @@ export const ChatMessage: FC<{
     </span>
   );
 };
+
+export default ChatMessage;
