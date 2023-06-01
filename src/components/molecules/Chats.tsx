@@ -63,7 +63,7 @@ const Chats: FC<IChatsProps> = ({
           <Link key={key} href={`/chats/${chat._id}`}>
             <ChatCard
               name={chat.botName}
-              message={"New message"}
+              message={"something"}
               time={"12.12.12"}
             />
           </Link>
