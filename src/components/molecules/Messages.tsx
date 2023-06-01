@@ -14,11 +14,7 @@ const Messages: FC<IProps> = ({ messages, isLoading }) => {
   let previousDate: string | null = null;
 
   const renderMessages = () => {
-    if (isLoading) {
-      return <Skeleton active paragraph={{ rows: 5 }} />;
-    }
-
-    if (messages.length === 0) {
+    if (messages.length === 0 && !isLoading) {
       return <EmptyState message="No messages yet" />;
     }
 
@@ -42,7 +38,12 @@ const Messages: FC<IProps> = ({ messages, isLoading }) => {
     </Divider>
   );
 
-  return <>{renderMessages()}</>;
+  return (
+    <>
+      {renderMessages()}
+      {isLoading && <Skeleton active paragraph={{ rows: 5 }} />}
+    </>
+  );
 };
 
 export default Messages;

@@ -46,6 +46,16 @@ const Chats: FC<IChatsProps> = ({
         className="flex flex-col overflow-y-scroll max-h-full"
         style={{ height: "calc(100% - 10rem)" }}
       >
+        {chats.map((chat, key) => {
+          const lastMessage = chat.messages[chat.messages.length - 1];
+
+          return (
+            <Link key={key} href={`/chats/${chat._id}`}>
+              <ChatCard name={chat.botName} message={lastMessage} />
+            </Link>
+          );
+        })}
+
         {isLoading &&
           [0, 1, 2].map((key) => (
             <div key={key} className="px-6 py-4 border-b">
@@ -58,16 +68,6 @@ const Chats: FC<IChatsProps> = ({
               />
             </div>
           ))}
-
-        {chats.map((chat, key) => {
-          const lastMessage = chat.messages[chat.messages.length - 1];
-
-          return (
-            <Link key={key} href={`/chats/${chat._id}`}>
-              <ChatCard name={chat.botName} message={lastMessage} />
-            </Link>
-          );
-        })}
       </div>
     </div>
   );
