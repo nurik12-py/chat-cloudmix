@@ -7,18 +7,18 @@ import { Message } from "@/types/chat";
 
 interface IProps {
   isLoading: boolean;
-  messages: Message[];
+  messages?: Message[];
 }
 
 const Messages: FC<IProps> = ({ messages, isLoading }) => {
   let previousDate: string | null = null;
 
   const renderMessages = () => {
-    if (messages.length === 0 && !isLoading) {
+    if (messages?.length === 0 && !isLoading) {
       return <EmptyState message="No messages yet" />;
     }
 
-    return messages.map((message, key) => {
+    return messages?.map((message, key) => {
       const formattedDate = formatDate(+message.date);
       const showDateLine = previousDate !== formattedDate;
       previousDate = formattedDate;
@@ -41,7 +41,9 @@ const Messages: FC<IProps> = ({ messages, isLoading }) => {
   return (
     <>
       {renderMessages()}
-      {isLoading && <Skeleton active paragraph={{ rows: 5 }} />}
+      {isLoading && messages === undefined && (
+        <Skeleton active paragraph={{ rows: 5 }} />
+      )}
     </>
   );
 };

@@ -75,7 +75,7 @@ const ChatsPage: FC<{ children: ReactElement }> = ({ children }) => {
         <Chats
           onCreateNewChatClick={handleNewChat}
           hidden={!!chatId}
-          chats={chats || []}
+          chats={chats}
           isLoading={isLoading}
           isCreatingNewChat={createChatMutation.isLoading}
         />

@@ -1,14 +1,14 @@
 import Link from "next/link";
 import { Chat } from "@/types/chat";
 import { FC } from "react";
-import { Button, Skeleton } from "antd";
+import { Button, Skeleton, Spin } from "antd";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import MessageCounter from "../atoms/MessageCounter";
 import ChatCard from "../atoms/ChatCard";
 
 interface IChatsProps {
   hidden: boolean;
-  chats: Chat[];
+  chats?: Chat[];
   isLoading: boolean;
   isCreatingNewChat: boolean;
   onCreateNewChatClick: () => void;
@@ -41,12 +41,12 @@ const Chats: FC<IChatsProps> = ({
           Start new conversation
         </Button>
       </div>
-      <MessageCounter count={chats.length} />
+      <MessageCounter count={chats?.length || 0} />
       <div
         className="flex flex-col overflow-y-scroll max-h-full"
         style={{ height: "calc(100% - 10rem)" }}
       >
-        {chats.map((chat, key) => {
+        {chats?.map((chat, key) => {
           const lastMessage = chat.messages[chat.messages.length - 1];
 
           return (
@@ -57,6 +57,7 @@ const Chats: FC<IChatsProps> = ({
         })}
 
         {isLoading &&
+          chats === undefined &&
           [0, 1, 2].map((key) => (
             <div key={key} className="px-6 py-4 border-b">
               <Skeleton
