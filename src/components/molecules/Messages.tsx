@@ -6,22 +6,19 @@ import { Skeleton } from "antd";
 interface IProps {
   isLoading: boolean;
   messages: Message[];
+  scrollToChatBottom?: () => void;
 }
 
-const Messages: FC<IProps> = ({ messages, isLoading }) => {
+const Messages: FC<IProps> = ({ messages, isLoading, scrollToChatBottom }) => {
   const chatBottomRef = useRef<HTMLDivElement>(null);
 
-  const scrollToChatBottom = () => {
+  const handlescrollToChatBottom = () => {
     chatBottomRef.current?.scrollIntoView({
       // behavior: "smooth",
       block: "center",
       inline: "nearest",
     });
   };
-
-  useEffect(() => {
-    scrollToChatBottom();
-  }, [messages]);
 
   return (
     <div className="bg-gray-100 flex-auto flex flex-col gap-6 w-full h-full px-4 py-10 overflow-y-auto">
