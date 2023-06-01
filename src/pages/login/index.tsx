@@ -11,6 +11,8 @@ import { useRecoilState } from "recoil";
 import { UserState } from "@/context/user";
 import * as Yup from "yup";
 import { authAPI } from "@/api/authAPI";
+import { show } from "antd-mobile/es/components/dialog/show";
+import showErrorMessage from "@/utils/showErrorMessage";
 
 type LoginFormType = {
   email: string;
@@ -52,7 +54,7 @@ const LoginPage = () => {
         router.push("/chats");
       },
       onError: (error) => {
-        message.error("Error occurred");
+        showErrorMessage(error, "Failed to login");
       },
     }
   );

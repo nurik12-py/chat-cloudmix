@@ -15,6 +15,8 @@ const ChatsPage: FC<{ children: ReactElement }> = ({ children }) => {
   const queryClient = useQueryClient();
   const [chats, setChats] = useRecoilState(ChatsState);
   const user = useRecoilValue(UserState);
+  const resetUserState = useResetRecoilState(UserState);
+  const resetChatState = useResetRecoilState(ChatsState);
   const router = useRouter();
   const chatId = router.query.id;
 
@@ -42,9 +44,9 @@ const ChatsPage: FC<{ children: ReactElement }> = ({ children }) => {
   };
 
   const handleLogout = () => {
-    useResetRecoilState(UserState)();
-    useResetRecoilState(ChatsState)();
     localStorage.removeItem("accessToken");
+    resetUserState();
+    resetChatState();
     router.push("/login");
   };
 

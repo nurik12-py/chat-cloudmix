@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import { useMutation } from "react-query";
 import * as Yup from "yup";
 import { authAPI } from "@/api/authAPI";
+import showErrorMessage from "@/utils/showErrorMessage";
 
 interface RegisterFormType {
   firstname: string;
@@ -47,8 +48,8 @@ const RegisterPage: React.FC = () => {
       localStorage.setItem("accessToken", data.data.access_token);
       router.push("/chats");
     },
-    onError: () => {
-      message.error("Something went wrong");
+    onError: (error) => {
+      showErrorMessage(error, "Failed to register");
     },
   });
 

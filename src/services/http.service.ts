@@ -24,7 +24,11 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
-    if (error.response && error.response.status === 401) {
+    if (
+      error.response &&
+      error.response.status === 401 &&
+      !window.location.href.includes("/login")
+    ) {
       window.location.href = "/login";
     }
 
