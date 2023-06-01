@@ -3,9 +3,6 @@ import { Chat } from "@/types/chat";
 import { FC } from "react";
 import { Button, Skeleton } from "antd";
 import { PlusIcon } from "@heroicons/react/24/outline";
-import { chatsAPI } from "@/api/chatsAPI";
-import { useMutation, useQueryClient } from "react-query";
-import showErrorMessage from "@/utils/showErrorMessage";
 import MessageCounter from "../atoms/MessageCounter";
 import ChatCard from "../atoms/ChatCard";
 
@@ -13,24 +10,17 @@ interface IChatsProps {
   hidden: boolean;
   chats: Chat[];
   isLoading: boolean;
+  isCreatingNewChat: boolean;
+  onCreateNewChatClick: () => void;
 }
 
-const Chats: FC<IChatsProps> = ({ hidden, chats, isLoading }) => {
-  const queryClient = useQueryClient();
-
-  const createChatMutation = useMutation(chatsAPI.createChat, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("chats");
-    },
-    onError: (error) => {
-      showErrorMessage(error, "Failed to create a new chat");
-    },
-  });
-
-  const handleNewChat = () => {
-    createChatMutation.mutate();
-  };
-
+const Chats: FC<IChatsProps> = ({
+  hidden,
+  chats,
+  isLoading,
+  isCreatingNewChat,
+  onCreateNewChatClick,
+}) => {
   return (
     <div
       className={`${
@@ -42,9 +32,9 @@ const Chats: FC<IChatsProps> = ({ hidden, chats, isLoading }) => {
           icon={
             <PlusIcon strokeWidth={2} className="w-6 h-6 text-indigo-500" />
           }
-          loading={createChatMutation.isLoading}
-          disabled={createChatMutation.isLoading}
-          onClick={handleNewChat}
+          loading={isCreatingNewChat}
+          disabled={isCreatingNewChat}
+          onClick={onCreateNewChatClick}
           className="w-full text-indigo-500 font-medium flex items-center justify-center"
           type="ghost"
         >
