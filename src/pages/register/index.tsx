@@ -49,7 +49,7 @@ const RegisterPage = () => {
         router.push("/chats");
       },
       onError: (error) => {
-        message.error("Error occured");
+        message.error("Something went wrong");
       },
     }
   );

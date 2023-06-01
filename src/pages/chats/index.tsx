@@ -21,7 +21,6 @@ const ChatsPage: FC<{ children: ReactElement }> = ({ children }) => {
     {
       onSuccess: (data) => {
         setChats(data);
-        console.log(data);
       },
     }
   );

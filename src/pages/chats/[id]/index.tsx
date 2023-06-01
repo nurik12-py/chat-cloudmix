@@ -7,7 +7,7 @@ import { useInfiniteQuery, useMutation, useQueryClient } from "react-query";
 import { messagesAPI } from "@/api/messagesAPI";
 import { useRecoilValue } from "recoil";
 import { ChatsState } from "@/context/chats";
-import { Modal } from "antd";
+import { Modal, message } from "antd";
 import { chatsAPI } from "@/api/chatsAPI";
 
 const Chat = () => {
@@ -25,7 +25,7 @@ const Chat = () => {
     isFetchingNextPage,
     hasNextPage,
   } = useInfiniteQuery(
-    ["messages", chatId],
+    ["chats", chatId, "messages"],
     ({ pageParam }) =>
       messagesAPI.getAll(chatId, 25, pageParam).then((res) => res.data),
     {
@@ -36,25 +36,27 @@ const Chat = () => {
     }
   );
 
-  const mutaion = useMutation(
+  const sendMessageMutaion = useMutation(
     (text: string) => messagesAPI.sendMessage(chatId, { text }),
     {
       onSuccess: (data) => {
         console.log(data);
       },
       onError: (error) => {
-        console.log(error);
+        message.error("Failed to send message");
       },
     }
   );
 
   const deleteChatMutation = useMutation(() => chatsAPI.delete(chatId), {
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["chats"],
+      });
       router.push("/chats");
-      queryClient.invalidateQueries({ exact: true, queryKey: "chats" });
     },
     onError: (error) => {
-      console.log(error);
+      message.error("Failed to delete chat");
     },
   });
 
@@ -65,9 +67,6 @@ const Chat = () => {
       onOk() {
         deleteChatMutation.mutate();
       },
-      onCancel() {
-        console.log("Cancel");
-      },
     });
   };
 
@@ -77,14 +76,8 @@ const Chat = () => {
         name={chat?.botName || "No name"}
         onDeleteClick={handleChatDelete}
       />
-      {/* <button
-        onClick={() => fetchNextPage()}
-        disabled={!hasNextPage || isFetchingNextPage}
-      >
-        {isFetchingNextPage ? "Loading more..." : "Load more"}
-      </button> */}
       <Messages messages={messages?.pages.flat() || []} isLoading={isLoading} />
-      <Typer onSend={(value) => mutaion.mutate(value)} />
+      <Typer onSend={(value) => sendMessageMutaion.mutate(value)} />
     </div>
   );
 };

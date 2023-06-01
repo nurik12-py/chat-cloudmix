@@ -22,8 +22,7 @@ export const Chats: FC<IProps> = ({ hidden, chats, isLoading }) => {
     },
     {
       onSuccess: (data) => {
-        queryClient.invalidateQueries({ queryKey: "chats" });
-        console.log(data);
+        queryClient.invalidateQueries("chats");
       },
       onError: (error) => {
         console.log(error);

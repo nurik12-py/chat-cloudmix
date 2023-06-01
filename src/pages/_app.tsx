@@ -8,15 +8,16 @@ import { ConfigProvider } from "antd";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 class MyApp extends App {
+  queryClient = new QueryClient();
+
   render() {
     const { Component, pageProps } = this.props;
     const Layout = Component.Layout || React.Fragment;
-    const queryClient = new QueryClient({});
 
     return (
       <RecoilRoot>
         <ConfigProvider>
-          <QueryClientProvider client={queryClient}>
+          <QueryClientProvider client={this.queryClient}>
             <Layout>
               <Component {...pageProps} />
             </Layout>
