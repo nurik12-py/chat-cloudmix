@@ -3,26 +3,38 @@ import ChatsPage from "..";
 import { useRouter } from "next/router";
 import { useInfiniteQuery, useMutation, useQueryClient } from "react-query";
 import { messagesAPI } from "@/api/messagesAPI";
-import { useRecoilValue } from "recoil";
-import { ChatsState } from "@/context/chats";
+import { selectedChatState, useChatsState } from "@/context/chats";
 import { Modal } from "antd";
 import { chatsAPI } from "@/api/chatsAPI";
 import showErrorMessage from "@/utils/showErrorMessage";
 import ChatNavbar from "@/components/atoms/ChatNavbar";
 import Typer from "@/components/atoms/Typer";
+import { useRecoilValue } from "recoil";
 
 const Chat = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const chats = useRecoilValue(ChatsState);
+  const chat = useRecoilValue(selectedChatState);
+  const [_chats, setChats] = useChatsState();
   const chatId = router.query.id as string;
-  const chat = chats.find((chat) => chat._id === chatId);
 
-  const { data: messages, isLoading } = useInfiniteQuery(
+  const { isLoading } = useInfiniteQuery(
     ["chats", chatId, "messages"],
     ({ pageParam }) =>
       messagesAPI.getAll(chatId, 25, pageParam).then((res) => res.data),
     {
+      onSuccess: (data) => {
+        const messages = data.pages.flatMap((page) => page);
+        setChats((prev) => {
+          const prevChat = prev.find((chat) => chat._id === chatId);
+          if (prevChat) {
+            return prev.map((chat) =>
+              chat._id === chatId ? { ...chat, messages } : chat
+            );
+          }
+          return prev;
+        });
+      },
       getNextPageParam: (lastPage) => {
         const lastMessage = lastPage.length;
         return lastMessage;
@@ -34,9 +46,7 @@ const Chat = () => {
   const sendMessageMutaion = useMutation(
     (text: string) => messagesAPI.sendMessage(chatId, { text }),
     {
-      onSuccess: (data) => {
-        console.log(data);
-      },
+      onSuccess: () => {},
       onError: (error) => {
         showErrorMessage(error, "Failed to send message");
         queryClient.invalidateQueries({
@@ -75,7 +85,7 @@ const Chat = () => {
         onDeleteClick={handleChatDelete}
         isTyping={sendMessageMutaion.isLoading}
       />
-      <Messages messages={messages?.pages.flat() || []} isLoading={isLoading} />
+      <Messages messages={chat?.messages || []} isLoading={isLoading} />
       <Typer onSend={(value) => sendMessageMutaion.mutate(value)} />
     </div>
   );

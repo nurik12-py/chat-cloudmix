@@ -3,22 +3,27 @@ import EmptyState from "@/components/atoms/EmptyState";
 
 import Chats from "@/components/molecules/Chats";
 import Navbar from "@/components/molecules/Navbar";
-import { ChatsState } from "@/context/chats";
-import { UserState } from "@/context/user";
+import { currentChatIDState, useChatsState } from "@/context/chats";
+
+import { useUserState } from "@/context/user";
 import showErrorMessage from "@/utils/showErrorMessage";
 import { useRouter } from "next/router";
-import { FC, ReactElement } from "react";
+import { FC, ReactElement, useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 
 const ChatsPage: FC<{ children: ReactElement }> = ({ children }) => {
   const queryClient = useQueryClient();
-  const [chats, setChats] = useRecoilState(ChatsState);
-  const user = useRecoilValue(UserState);
-  const resetUserState = useResetRecoilState(UserState);
-  const resetChatState = useResetRecoilState(ChatsState);
+  const [chats, setChats] = useChatsState();
+  const [_currentChatID, setCurrentChatIDState] =
+    useRecoilState(currentChatIDState);
+  const [user, setUser] = useUserState();
   const router = useRouter();
   const chatId = router.query.id;
+
+  useEffect(() => {
+    setCurrentChatIDState(chatId as string);
+  }, [chatId]);
 
   const { isLoading } = useQuery(
     ["chats"],
@@ -45,8 +50,13 @@ const ChatsPage: FC<{ children: ReactElement }> = ({ children }) => {
 
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
-    resetUserState();
-    resetChatState();
+    setChats([]);
+    setUser({
+      id: "",
+      email: "",
+      firstname: "",
+      lastname: "",
+    });
     router.push("/login");
   };
 
