@@ -5,11 +5,17 @@ import { Skeleton } from "antd";
 
 interface IProps {
   isLoading: boolean;
+  isTyping: boolean;
   messages: Message[];
   scrollToChatBottom?: () => void;
 }
 
-const Messages: FC<IProps> = ({ messages, isLoading, scrollToChatBottom }) => {
+const Messages: FC<IProps> = ({
+  messages,
+  isLoading,
+  isTyping,
+  scrollToChatBottom,
+}) => {
   const chatBottomRef = useRef<HTMLDivElement>(null);
 
   const handlescrollToChatBottom = () => {
@@ -33,6 +39,11 @@ const Messages: FC<IProps> = ({ messages, isLoading, scrollToChatBottom }) => {
       {messages.map((message, key) => (
         <ChatMessage key={key} message={message} />
       ))}
+      {isTyping && (
+        <span className="inline-block self-start px-4 py-3 bg-slate-50 border rounded-xl animate-pulse">
+          Typing...
+        </span>
+      )}
       <div ref={chatBottomRef}></div>
     </div>
   );

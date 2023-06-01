@@ -80,7 +80,11 @@ const Chat = () => {
         name={chat?.botName || "No name"}
         onDeleteClick={handleChatDelete}
       />
-      <Messages messages={messages?.pages.flat() || []} isLoading={isLoading} />
+      <Messages
+        isTyping={sendMessageMutaion.isLoading}
+        messages={messages?.pages.flat() || []}
+        isLoading={isLoading}
+      />
       <Typer onSend={(value) => sendMessageMutaion.mutate(value)} />
     </div>
   );
