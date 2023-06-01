@@ -24,7 +24,7 @@ const Messages: FC<IProps> = ({ messages, isLoading }) => {
       previousDate = formattedDate;
 
       return (
-        <React.Fragment key={`message-${key}`}>
+        <React.Fragment key={message.id}>
           {showDateLine && renderDateLine(formattedDate)}
           <ChatMessage message={message} />
         </React.Fragment>
