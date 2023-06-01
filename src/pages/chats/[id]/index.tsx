@@ -1,7 +1,12 @@
 import Messages from "@/components/molecules/Messages";
 import ChatsPage from "..";
 import { useRouter } from "next/router";
-import { useInfiniteQuery, useMutation, useQueryClient } from "react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "react-query";
 import { messagesAPI } from "@/api/messagesAPI";
 import { selectedChatState, useChatsState } from "@/context/chats";
 import { Modal } from "antd";
@@ -20,13 +25,12 @@ const Chat = () => {
   const [_chats, setChats] = useChatsState();
   const chatId = router.query.id as string;
 
-  const { isLoading } = useInfiniteQuery(
+  const { isLoading } = useQuery(
     ["chats", chatId, "messages"],
-    ({ pageParam }) =>
-      messagesAPI.getAll(chatId, 25, pageParam).then((res) => res.data),
+    () => messagesAPI.getAll(chatId, 25, 0).then((res) => res.data),
     {
       onSuccess: (data) => {
-        const messages = data.pages.flatMap((page) => page);
+        const messages = data;
         setChats((prev) => {
           const prevChat = prev.find((chat) => chat._id === chatId);
           if (prevChat) {
