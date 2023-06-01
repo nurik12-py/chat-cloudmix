@@ -99,6 +99,30 @@ const Chat = () => {
   };
 
   const handleSendMessage = (value: string) => {
+    setChats((prev) => {
+      const prevChat = prev.find((chat) => chat._id === chatId);
+      if (prevChat) {
+        return prev.map((chat) =>
+          chat._id === chatId
+            ? {
+                ...chat,
+                messages: [
+                  ...chat.messages,
+                  {
+                    id: Math.random().toString(),
+                    text: value,
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString(),
+                    date: new Date().getTime().toString(),
+                    sender: "user",
+                  },
+                ],
+              }
+            : chat
+        );
+      }
+      return prev;
+    });
     handlescrollToChatBottom();
     sendMessageMutaion.mutate(value);
   };
