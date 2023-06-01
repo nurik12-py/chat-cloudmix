@@ -5,7 +5,7 @@ const formatDate = (date: number) => {
   const givenDate = moment(date);
 
   if (today.isSame(givenDate, "day")) {
-    return givenDate.format("h:mm A");
+    return givenDate.format("HH:mm");
   } else {
     return givenDate.format("DD.MM.YYYY");
   }

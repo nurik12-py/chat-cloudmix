@@ -59,15 +59,15 @@ const Chats: FC<IChatsProps> = ({
             </div>
           ))}
 
-        {chats.map((chat, key) => (
-          <Link key={key} href={`/chats/${chat._id}`}>
-            <ChatCard
-              name={chat.botName}
-              message={"something"}
-              time={"12.12.12"}
-            />
-          </Link>
-        ))}
+        {chats.map((chat, key) => {
+          const lastMessage = chat.messages[chat.messages.length - 1];
+
+          return (
+            <Link key={key} href={`/chats/${chat._id}`}>
+              <ChatCard name={chat.botName} message={lastMessage} />
+            </Link>
+          );
+        })}
       </div>
     </div>
   );

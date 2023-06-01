@@ -3,7 +3,8 @@ export type Message = {
   sender: string;
   date: string;
   text: string;
-  isRead: boolean;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type Chat = {

@@ -11,7 +11,6 @@ interface IProps {
 }
 
 const Messages: FC<IProps> = ({ messages, isLoading }) => {
-  const chatBottomRef = useRef<HTMLDivElement>(null);
   let previousDate: string | null = null;
 
   const renderMessages = () => {
@@ -43,12 +42,7 @@ const Messages: FC<IProps> = ({ messages, isLoading }) => {
     </Divider>
   );
 
-  return (
-    <div className="bg-gray-100 flex-auto flex flex-col gap-6 w-full h-full px-4 py-10 overflow-y-auto">
-      {renderMessages()}
-      <div ref={chatBottomRef}></div>
-    </div>
-  );
+  return <>{renderMessages()}</>;
 };
 
 export default Messages;

@@ -10,8 +10,10 @@ import showErrorMessage from "@/utils/showErrorMessage";
 import ChatNavbar from "@/components/atoms/ChatNavbar";
 import Typer from "@/components/atoms/Typer";
 import { useRecoilValue } from "recoil";
+import { use, useEffect, useRef } from "react";
 
 const Chat = () => {
+  const chatBottomRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const queryClient = useQueryClient();
   const chat = useRecoilValue(selectedChatState);
@@ -42,6 +44,20 @@ const Chat = () => {
       refetchInterval: 2000,
     }
   );
+
+  useEffect(() => {
+    handlescrollToChatBottom();
+  }, [chat, chatId]);
+
+  const handlescrollToChatBottom = () => {
+    setTimeout(() => {
+      chatBottomRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+        inline: "nearest",
+      });
+    }, 500);
+  };
 
   const sendMessageMutaion = useMutation(
     (text: string) => messagesAPI.sendMessage(chatId, { text }),
@@ -78,6 +94,11 @@ const Chat = () => {
     });
   };
 
+  const handleSendMessage = (value: string) => {
+    handlescrollToChatBottom();
+    sendMessageMutaion.mutate(value);
+  };
+
   return (
     <div className="relative flex flex-col w-full h-full">
       <ChatNavbar
@@ -85,8 +106,11 @@ const Chat = () => {
         onDeleteClick={handleChatDelete}
         isTyping={sendMessageMutaion.isLoading}
       />
-      <Messages messages={chat?.messages || []} isLoading={isLoading} />
-      <Typer onSend={(value) => sendMessageMutaion.mutate(value)} />
+      <div className="bg-gray-100 flex-auto flex flex-col gap-6 w-full h-full px-4 py-10 overflow-y-auto">
+        <Messages messages={chat?.messages || []} isLoading={isLoading} />
+        <div ref={chatBottomRef}></div>
+      </div>
+      <Typer onSend={handleSendMessage} />
     </div>
   );
 };
