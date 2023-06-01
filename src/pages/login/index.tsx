@@ -1,6 +1,6 @@
 import React from "react";
 import { CloudIcon } from "@heroicons/react/24/solid";
-import { Button, Form, Input, Typography, message } from "antd";
+import { Button, Form, Input, Typography } from "antd";
 import { useFormik } from "formik";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -11,7 +11,6 @@ import { useRecoilState } from "recoil";
 import { UserState } from "@/context/user";
 import * as Yup from "yup";
 import { authAPI } from "@/api/authAPI";
-import { show } from "antd-mobile/es/components/dialog/show";
 import showErrorMessage from "@/utils/showErrorMessage";
 
 type LoginFormType = {

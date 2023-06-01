@@ -1,12 +1,7 @@
 import Messages from "@/components/molecules/Messages";
 import ChatsPage from "..";
 import { useRouter } from "next/router";
-import {
-  useInfiniteQuery,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { messagesAPI } from "@/api/messagesAPI";
 import { selectedChatState, useChatsState } from "@/context/chats";
 import { Modal } from "antd";
@@ -15,7 +10,7 @@ import showErrorMessage from "@/utils/showErrorMessage";
 import ChatNavbar from "@/components/atoms/ChatNavbar";
 import Typer from "@/components/atoms/Typer";
 import { useRecoilValue } from "recoil";
-import { use, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 const Chat = () => {
   const chatBottomRef = useRef<HTMLDivElement>(null);
