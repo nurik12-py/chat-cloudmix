@@ -1,7 +1,8 @@
-import { FC, useEffect, useRef } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { ChatMessage } from "../atoms/ChatMessage";
 import { Message } from "@/types/chat";
-import { Skeleton } from "antd";
+import { Divider, Skeleton } from "antd";
+import moment from "moment";
 
 interface IProps {
   isLoading: boolean;
@@ -17,13 +18,26 @@ const Messages: FC<IProps> = ({
   scrollToChatBottom,
 }) => {
   const chatBottomRef = useRef<HTMLDivElement>(null);
-
+  let previousDate: any = null;
   const handlescrollToChatBottom = () => {
     chatBottomRef.current?.scrollIntoView({
       // behavior: "smooth",
       block: "center",
       inline: "nearest",
     });
+  };
+
+  const formatDate = (date: number) => {
+    const today = moment().startOf("day");
+    const givenDate = moment(date);
+
+    if (today.isSame(givenDate, "day")) {
+      // Display time for today's date
+      return givenDate.format("h:mm A"); // Example format: "1:30 PM"
+    } else {
+      // Display formatted date for non-today's date
+      return givenDate.format("DD.MM.YYYY"); // Example format: "31.05.2023"
+    }
   };
 
   return (
@@ -36,9 +50,21 @@ const Messages: FC<IProps> = ({
           </span>
         </div>
       )}
-      {messages.map((message, key) => (
-        <ChatMessage key={key} message={message} />
-      ))}
+      {messages.map((message, key) => {
+        const formattedDate = formatDate(+message.date);
+        const showDateLine = previousDate !== formattedDate;
+        previousDate = formattedDate;
+        return (
+          <>
+            {showDateLine && (
+              <Divider>
+                <p className="text-gray-500">{formattedDate}</p>
+              </Divider>
+            )}
+            <ChatMessage key={key} message={message} />
+          </>
+        );
+      })}
       {isTyping && (
         <span className="inline-block self-start px-4 py-3 bg-slate-50 border rounded-xl animate-pulse">
           Typing...
