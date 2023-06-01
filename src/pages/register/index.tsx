@@ -8,6 +8,10 @@ import { useMutation } from "react-query";
 import * as Yup from "yup";
 import { authAPI } from "@/api/authAPI";
 import showErrorMessage from "@/utils/showErrorMessage";
+import jwt_decode from "jwt-decode";
+import { User } from "@/types/user";
+import { useRecoilState } from "recoil";
+import { UserState } from "@/context/user";
 
 interface RegisterFormType {
   firstname: string;
@@ -27,6 +31,7 @@ const validationSchema = Yup.object().shape({
 
 const RegisterPage: React.FC = () => {
   const router = useRouter();
+  const [_user, setUser] = useRecoilState(UserState);
 
   const formik = useFormik<RegisterFormType>({
     initialValues: {
@@ -45,7 +50,10 @@ const RegisterPage: React.FC = () => {
 
   const registerMutation = useMutation(authAPI.register, {
     onSuccess: (data) => {
-      localStorage.setItem("accessToken", data.data.access_token);
+      const accessToken = data.data.access_token;
+      const decodedToken = jwt_decode<User>(accessToken);
+      setUser(decodedToken);
+      localStorage.setItem("accessToken", accessToken);
       router.push("/chats");
     },
     onError: (error) => {

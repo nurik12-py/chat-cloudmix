@@ -27,7 +27,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const LoginPage = () => {
-  const [user, setUser] = useRecoilState(UserState);
+  const [_user, setUser] = useRecoilState(UserState);
   const router = useRouter();
 
   const formik = useFormik<LoginFormType>({
