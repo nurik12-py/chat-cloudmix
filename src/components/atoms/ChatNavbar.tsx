@@ -10,7 +10,16 @@ interface IChatNavbarProps {
   onDeleteClick?: () => void;
 }
 
-const ChatNavbar: FC<IChatNavbarProps> = ({ name, onDeleteClick }) => {
+enum Status {
+  IDLE = "Online",
+  TYPING = "Typing...",
+}
+
+const ChatNavbar: FC<IChatNavbarProps> = ({
+  name,
+  isTyping,
+  onDeleteClick,
+}) => {
   return (
     <nav className="border-b h-20 flex items-center justify-between gap-4 bg-white w-full border-gray-300 px-6 py-5">
       <div className="flex items-center gap-4">
@@ -19,7 +28,9 @@ const ChatNavbar: FC<IChatNavbarProps> = ({ name, onDeleteClick }) => {
         </Link>
         <div>
           <p className="font-medium">{name}</p>
-          <span className="text-gray-500">Online</span>
+          <span className="text-gray-500">
+            {isTyping ? Status.TYPING : Status.IDLE}
+          </span>
         </div>
       </div>
       <div>

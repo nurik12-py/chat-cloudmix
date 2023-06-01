@@ -73,6 +73,7 @@ const Chat = () => {
       <ChatNavbar
         name={chat?.botName || "No name"}
         onDeleteClick={handleChatDelete}
+        isTyping={sendMessageMutaion.isLoading}
       />
       <Messages messages={messages?.pages.flat() || []} isLoading={isLoading} />
       <Typer onSend={(value) => sendMessageMutaion.mutate(value)} />
