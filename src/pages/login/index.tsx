@@ -1,4 +1,4 @@
-import { authAPI } from "@/api/authAPI";
+import React from "react";
 import { CloudIcon } from "@heroicons/react/24/solid";
 import { Button, Form, Input, Typography, message } from "antd";
 import { useFormik } from "formik";
@@ -10,6 +10,7 @@ import { User } from "@/types/user";
 import { useRecoilState } from "recoil";
 import { UserState } from "@/context/user";
 import * as Yup from "yup";
+import { authAPI } from "@/api/authAPI";
 
 type LoginFormType = {
   email: string;
@@ -33,7 +34,7 @@ const LoginPage = () => {
       password: "",
     },
     validateOnBlur: true,
-    validateOnChange: false,
+    validateOnChange: false, // Set to false to validate on blur only
     validationSchema: validationSchema,
     onSubmit: () => {
       loginMutation.mutate(formik.values);
@@ -51,7 +52,7 @@ const LoginPage = () => {
         router.push("/chats");
       },
       onError: (error) => {
-        message.error("Error occured");
+        message.error("Error occurred");
       },
     }
   );
@@ -75,11 +76,13 @@ const LoginPage = () => {
           </Typography.Text>
         </div>
 
-        <Form onSubmitCapture={formik.submitForm} className="w-full">
+        <Form onFinish={formik.submitForm} className="w-full">
           <Form.Item
             className="mt-4"
             name="email"
-            validateStatus={formik.errors.email ? "error" : ""}
+            validateStatus={
+              formik.errors.email && formik.touched.email ? "error" : ""
+            }
             help={formik.errors.email}
           >
             <Input
@@ -87,19 +90,24 @@ const LoginPage = () => {
               name="email"
               placeholder="Email"
               onChange={formik.handleChange}
+              onBlur={formik.handleBlur} // Add onBlur event handler
+              value={formik.values.email}
             />
           </Form.Item>
           <Form.Item
             name="password"
-            validateStatus={formik.errors.password ? "error" : ""}
+            validateStatus={
+              formik.errors.password && formik.touched.password ? "error" : ""
+            }
             help={formik.errors.password}
           >
-            <Input
+            <Input.Password
               size="large"
               name="password"
-              type="password"
               placeholder="Password"
               onChange={formik.handleChange}
+              onBlur={formik.handleBlur} // Add onBlur event handler
+              value={formik.values.password}
             />
           </Form.Item>
 

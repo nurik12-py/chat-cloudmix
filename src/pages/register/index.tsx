@@ -1,4 +1,4 @@
-import { authAPI } from "@/api/authAPI";
+import React from "react";
 import { CloudIcon } from "@heroicons/react/24/solid";
 import { Button, Form, Input, Typography, message } from "antd";
 import { useFormik } from "formik";
@@ -6,24 +6,25 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useMutation } from "react-query";
 import * as Yup from "yup";
+import { authAPI } from "@/api/authAPI";
 
-type RegisterFormType = {
+interface RegisterFormType {
   firstname: string;
   lastname: string;
   email: string;
   password: string;
-};
+}
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Email is required"),
   password: Yup.string()
-    .min(8, "Password must be at least 8 symbols")
+    .min(8, "Password must be at least 8 characters")
     .required("Password is required"),
   firstname: Yup.string().required("Firstname is required"),
   lastname: Yup.string().required("Lastname is required"),
 });
 
-const RegisterPage = () => {
+const RegisterPage: React.FC = () => {
   const router = useRouter();
 
   const formik = useFormik<RegisterFormType>({
@@ -33,26 +34,23 @@ const RegisterPage = () => {
       email: "",
       password: "",
     },
-    onSubmit: () => {
-      registerMutation.mutate(formik.values);
+    onSubmit: (values) => {
+      registerMutation.mutate(values);
     },
     validateOnBlur: true,
-    validateOnChange: true,
-    validationSchema: validationSchema,
+    validateOnChange: false,
+    validationSchema,
   });
 
-  const registerMutation = useMutation(
-    (data: RegisterFormType) => authAPI.register(data),
-    {
-      onSuccess: (data) => {
-        localStorage.setItem("accessToken", data.data.access_token);
-        router.push("/chats");
-      },
-      onError: (error) => {
-        message.error("Something went wrong");
-      },
-    }
-  );
+  const registerMutation = useMutation(authAPI.register, {
+    onSuccess: (data) => {
+      localStorage.setItem("accessToken", data.data.access_token);
+      router.push("/chats");
+    },
+    onError: () => {
+      message.error("Something went wrong");
+    },
+  });
 
   return (
     <main className="w-full h-full flex flex-col items-center justify-center overflow-hidden">
@@ -63,6 +61,7 @@ const RegisterPage = () => {
           <span className="font-medium text-indigo-500">Mix</span>
         </div>
       </div>
+
       <div className="w-full px-10 mt-4 max-w-sm flex flex-col gap-1 md:gap-8 items-center justify-center">
         <div className="w-full">
           <Typography.Text className="text-2xl font-semibold block mb-2">
@@ -73,11 +72,13 @@ const RegisterPage = () => {
           </Typography.Text>
         </div>
 
-        <Form onSubmitCapture={formik.submitForm} className="w-full">
+        <Form onFinish={formik.handleSubmit} className="w-full">
           <Form.Item
             className="mt-4"
             name="firstname"
-            validateStatus={formik.errors.firstname ? "error" : ""}
+            validateStatus={
+              formik.errors.firstname && formik.touched.firstname ? "error" : ""
+            }
             help={formik.errors.firstname}
           >
             <Input
@@ -85,13 +86,16 @@ const RegisterPage = () => {
               name="firstname"
               placeholder="Firstname"
               onChange={formik.handleChange}
+              value={formik.values.firstname}
             />
           </Form.Item>
 
           <Form.Item
             className="mt-4"
             name="lastname"
-            validateStatus={formik.errors.lastname ? "error" : ""}
+            validateStatus={
+              formik.errors.lastname && formik.touched.lastname ? "error" : ""
+            }
             help={formik.errors.lastname}
           >
             <Input
@@ -99,33 +103,41 @@ const RegisterPage = () => {
               name="lastname"
               placeholder="Lastname"
               onChange={formik.handleChange}
+              value={formik.values.lastname}
             />
           </Form.Item>
 
           <Form.Item
             className="mt-4"
             name="email"
-            validateStatus={formik.errors.email ? "error" : ""}
+            validateStatus={
+              formik.errors.email && formik.touched.email ? "error" : ""
+            }
             help={formik.errors.email}
           >
             <Input
               size="large"
               name="email"
+              type="email"
               placeholder="Email"
               onChange={formik.handleChange}
+              value={formik.values.email}
             />
           </Form.Item>
+
           <Form.Item
             name="password"
-            validateStatus={formik.errors.password ? "error" : ""}
+            validateStatus={
+              formik.errors.password && formik.touched.password ? "error" : ""
+            }
             help={formik.errors.password}
           >
-            <Input
+            <Input.Password
               size="large"
               name="password"
-              type="password"
               placeholder="Password"
               onChange={formik.handleChange}
+              value={formik.values.password}
             />
           </Form.Item>
 
@@ -143,7 +155,7 @@ const RegisterPage = () => {
 
         <Link href="/login">
           <Button type="link" className="text-gray-500">
-            Already have account? Login
+            Already have an account? Login
           </Button>
         </Link>
       </div>
