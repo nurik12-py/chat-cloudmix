@@ -6,6 +6,7 @@ import React from "react";
 import { RecoilRoot } from "recoil";
 import { ConfigProvider } from "antd";
 import { QueryClient, QueryClientProvider } from "react-query";
+import Head from "next/head";
 
 class MyApp extends App {
   queryClient = new QueryClient();
@@ -15,15 +16,20 @@ class MyApp extends App {
     const Layout = Component.Layout || React.Fragment;
 
     return (
-      <RecoilRoot>
-        <ConfigProvider>
-          <QueryClientProvider client={this.queryClient}>
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
-          </QueryClientProvider>
-        </ConfigProvider>
-      </RecoilRoot>
+      <>
+        <Head>
+          <title>CloudMix</title>
+        </Head>
+        <RecoilRoot>
+          <ConfigProvider>
+            <QueryClientProvider client={this.queryClient}>
+              <Layout>
+                <Component {...pageProps} />
+              </Layout>
+            </QueryClientProvider>
+          </ConfigProvider>
+        </RecoilRoot>
+      </>
     );
   }
 }
