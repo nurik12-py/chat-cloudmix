@@ -9,7 +9,16 @@ import "@/styles/globals.css";
 
 function MyApp({ Component, pageProps }: AppProps & { Component: any }) {
   const Layout = Component.Layout || React.Fragment;
-  const [queryClient] = React.useState(() => new QueryClient());
+  const [queryClient] = React.useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            refetchOnWindowFocus: false,
+          },
+        },
+      })
+  );
 
   return (
     <>
