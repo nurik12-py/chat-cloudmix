@@ -33,6 +33,7 @@ const Chat = () => {
         const lastMessage = lastPage.length;
         return lastMessage;
       },
+      refetchInterval: 2000,
     }
   );
 
@@ -44,6 +45,9 @@ const Chat = () => {
       },
       onError: (error) => {
         message.error("Failed to send message");
+        queryClient.invalidateQueries({
+          queryKey: ["chats", chatId, "messages"],
+        });
       },
     }
   );
