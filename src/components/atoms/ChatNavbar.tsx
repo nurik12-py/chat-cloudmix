@@ -28,9 +28,14 @@ const ChatNavbar: FC<IChatNavbarProps> = ({
         </Link>
         <div>
           <p className="font-medium">{name}</p>
-          <span className="text-gray-500">
-            {isTyping ? Status.TYPING : Status.IDLE}
-          </span>
+          <div className="flex items-center gap-2">
+            {isTyping && (
+              <span className="animate-ping w-2 h-2 inline-flex rounded-full bg-indigo-400 opacity-75"></span>
+            )}
+            <span className="text-gray-500">
+              {isTyping ? Status.TYPING : Status.IDLE}
+            </span>
+          </div>
         </div>
       </div>
       <div>
